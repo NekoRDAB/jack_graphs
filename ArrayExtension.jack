@@ -1,0 +1,14 @@
+class ArrayExtension 
+{
+    function Array zeros(int n)
+    {
+        var Array arr;
+        var int i;
+        let arr = Array.new(n);
+        let i = 0;
+        while (i < n) {
+            let arr[i] = 0;
+            let i = i + 1; }
+        return arr;
+    }
+}

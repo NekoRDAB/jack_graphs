@@ -1,0 +1,25 @@
+class DStack 
+{
+    field Array values;
+    field int top;
+
+    constructor DStack new(int n) 
+    {
+        let values = ArrayExtension.zeros(n);
+        let top = 0;
+        return this;
+    }
+
+    method void Push(Decimal value) 
+    {
+        let values[top] = value;
+        let top = top + 1;
+        return;
+    }
+
+    method Decimal Pop()
+    {
+        let top = top - 1;
+        return values[top];
+    }
+}

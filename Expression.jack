@@ -1,0 +1,85 @@
+class Expression 
+{
+    field DStack stack;
+    field Array actions, actionTypes;
+
+    constructor Expression new(String str)//
+    {
+        var String value;
+        var int actionPtr, i;
+        var Char c;
+
+        let stack = DStack.new(10);
+        let actions = ArrayExtension.zeros(30);
+        let actionPtr = 0;
+        let actionTypes = ArrayExtension.zeros(30);
+
+        let i = 0;
+        let value = String.new(15);
+        while (i < str.length()) {
+            let c = str.charAt(i);
+            if ((47 < c) & (c < 58)) {
+                do value.appendChar(c);
+                let c = str.charAt(i + 1); 
+                if (~((47 < c) & (c < 58))) {
+                    let actions[actionPtr] = Decimal.new(value);
+                    let value = String.new(15);
+                    let actionTypes[actionPtr] = 1;
+                    let actionPtr = actionPtr + 1; } }
+            if (c = 43) {//+
+                let actions[actionPtr] = 0;
+                let actionTypes[actionPtr] = 2;
+                let actionPtr = actionPtr + 1; }
+            if (c = 45) {//-
+                let actions[actionPtr] = 1;
+                let actionTypes[actionPtr] = 2;
+                let actionPtr = actionPtr + 1; }
+            if (c = 42) {//*
+                let actions[actionPtr] = 2;
+                let actionTypes[actionPtr] = 2;
+                let actionPtr = actionPtr + 1; }
+            if (c = 94) {//^
+                let actions[actionPtr] = 3;
+                let actionTypes[actionPtr] = 2;
+                let actionPtr = actionPtr + 1; }
+            if (c = 88) {//x
+                let actionTypes[actionPtr] = 3;
+                let actionPtr = actionPtr + 1; }
+            let i = i + 1; }
+        let i = 0;
+        while(i < actionPtr){do Output.printInt(actions[actionPtr]); do Output.printString(" "); let i = i + 1;}
+        return this;
+    }
+
+    method Decimal eval(Decimal x)  //
+    {
+        var int i;
+        var Decimal val1, val2, res;
+
+        let i = 0;
+        while (actionTypes[i] > 0) 
+        {
+            if (actionTypes[i] = 1) {
+                do stack.Push(actions[i]); }
+            
+            if (actionTypes[i] = 2) {
+                let val2 = stack.Pop();
+                let val1 = stack.Pop();
+                if (actions[i] = 0) {
+                    let res = val1.add(val2); }
+                if (actions[i] = 1) {
+                    let res = val1.sub(val2); }
+                if (actions[i] = 2) {
+                    let res = val1.mult(val2); }
+                if (actions[i] = 3) {
+                    let res = val1.pow(val2.toInt()); }
+                do stack.Push(res); }
+            
+            if (actionTypes[i] = 3) {
+                do stack.Push(x); }
+            
+            let i = i + 1; 
+        }
+        return stack.Pop();
+    }
+}

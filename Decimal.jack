@@ -1,0 +1,305 @@
+class Decimal
+{
+    field bool positive, fraction;
+    field Array digits;
+
+    constructor Decimal new(String str)
+    {
+        var int dot, i;
+        let positive = ~(str.charAt(0) = 45);
+        let digits = ArrayExtension.zeros(13);
+        let dot = pointIndex(str);
+        let fraction = (dot < str.length());
+
+        let i = dot;
+        while (i > 1) {
+            let i = i - 1;
+            do setDigit(dot - i - 1, charToInt(str.charAt(i))); }
+        if (positive) {
+            do setDigit(dot - 1, charToInt(str.charAt(0))); }
+
+        if (fraction) {
+            let i = dot;
+            while (i < (str.length() - 1)) {
+                let i = i + 1;
+                do setDigit(dot - i, charToInt(str.charAt(i))); } }
+
+        do str.dispose();
+        return this;
+    }
+
+    constructor Decimal fromInt(int value) 
+    {
+        var int i;
+        let digits = ArrayExtension.zeros(13);
+        let i = 0;
+        let positive = (value > 0);
+        if (value < 0) {
+            let value = -value; }
+        while (value > 0) {
+            do setDigit(i, mod10(value));
+            let value = value / 10;
+            let i = i + 1; }
+        return this; 
+    }
+
+    method int toInt()
+    {
+        var int value, i;
+        let i = 0;
+        while (i < (getIntPtr() + 1)) {
+            let value = value + (getDigit(i) * pow10(i));
+            let i = i + 1; }
+        if (~positive) {
+            let value = -value; }
+        return value;
+    }
+
+    method Decimal add(Decimal other)
+    {
+        var Decimal result;
+        var int intPtr, fracPtr, i;
+
+        if (~positive) {
+            return other.sub(opposite()); }
+        if (~other.isPositive()) {
+            return sub(other.opposite()); }
+        
+        let result = copy();
+        let intPtr = other.getIntPtr();
+        let fracPtr = other.getFracPtr();
+
+        let i = fracPtr;
+        while (i < (intPtr + 1)) {
+            if(result.getDigit(i) > 9) {
+                do result.addToDigit(i, -10);
+                do result.addToDigit(i + 1, 1); }
+            do result.addToDigit(i, other.getDigit(i));
+            if(result.getDigit(i) > 9) {
+                do result.addToDigit(i, -10);
+                do result.addToDigit(i + 1, 1); } 
+            let i = i + 1; }
+        
+        return result;
+    }
+
+    method void addToThis(Decimal other)//
+    {
+        var int intPtr, fracPtr, i;
+
+        //if (~positive) {
+            //return other.sub(opposite()); }
+        //if (~other.isPositive()) {
+            //return sub(other.opposite()); }
+        
+        let intPtr = other.getIntPtr();
+        let fracPtr = other.getFracPtr();
+
+        let i = fracPtr;
+        while (i < (intPtr + 1)) {
+            if(getDigit(i) > 9) {
+                do addToDigit(i, -10);
+                do addToDigit(i + 1, 1); }
+            do addToDigit(i, other.getDigit(i));
+            if(getDigit(i) > 9) {
+                do addToDigit(i, -10);
+                do addToDigit(i + 1, 1); } 
+            let i = i + 1; }
+        return;
+    }
+
+    method Decimal sub(Decimal other)
+    {
+        var Decimal result;
+        var int intPtr, fracPtr, i;
+
+        if (other.greater(this)) {
+            let result = other.sub(this);
+            do result.invert();
+            return result; }
+        if (~positive) {
+            do invert();
+            let result = add(other);
+            do invert();
+            do result.invert();
+            return result; }
+        if (~other.isPositive()) {
+            do other.invert();
+            let result = add(other);
+            do other.invert();
+            return result; }
+
+        let result = copy();
+        let intPtr = other.getIntPtr();
+        let fracPtr = other.getFracPtr();
+
+        let i = fracPtr;
+        while (i < (intPtr + 1)) {
+            if(result.getDigit(i) < 0) {
+                do result.addToDigit(i, 10);
+                do result.addToDigit(i + 1, -1); }
+            do result.addToDigit(i, -other.getDigit(i));
+            if(result.getDigit(i) < 0) {
+                do result.addToDigit(i, 10);
+                do result.addToDigit(i + 1, -1); } 
+            let i = i + 1; }
+        
+        return result;
+    }
+
+    method Decimal mult(Decimal other)
+    {
+        var int i;
+        var Decimal result, term;
+        let result = Decimal.new("0");
+        let i = other.getFracPtr();
+        while (i < (other.getIntPtr() + 1)) {
+            let term = multByDigit(other.getDigit(i), i);
+            do result.addToThis(term); ////
+            do term.dispose();
+            let i = i + 1; }
+        if (oneOf(positive, other.isPositive())) {
+            do result.invert(); }
+        return result;
+    }
+
+    method Decimal multByDigit(int digit, int exp)
+    {
+        var int i;
+        var Decimal result;
+        let result = Decimal.new("0");
+        let i = getFracPtr();
+        while (i < (getIntPtr() + 1)) {
+            do result.addToDigit(i + exp, getDigit(i) * digit);
+            do result.addToDigit(i + exp + 1, result.getDigit(i + exp) / 10);
+            do result.setDigit(i + exp, mod10(result.getDigit(i + exp)));
+            let i = i + 1; }
+        return result;
+    }
+
+    method Decimal pow(int p)
+    {
+        var Decimal factor, result;
+        var int i;
+        let i = 0;
+        let result = copy();
+        while (i < (p - 1)) {
+            let factor = result.mult(this);
+            do result.dispose();
+            let result = factor;
+            let i = i + 1; }
+        return result;
+    }
+
+    method bool greater(Decimal other) 
+    {
+        var int i;
+        let i = Math.max(getIntPtr(), other.getIntPtr());
+        while (i > -7) {
+            if (getDigit(i) > other.getDigit(i)) {
+                return true; }
+            if (getDigit(i) < other.getDigit(i)) {
+                return false; }
+            let i = i - 1; }
+        return false;
+    }
+
+    method String toString()
+    {   
+        var String str;
+        var int i;
+        let str = String.new(15);
+
+        if (~positive) {
+            do str.appendChar(45); }
+        
+        let i = getIntPtr();
+        while (i > (getFracPtr() - 1)) {
+            if (i = -1) {
+                do str.appendChar(46); }
+            do str.appendChar(intToChar(getDigit(i)));
+            let i = i - 1; }
+        
+        return str;
+    }
+
+    method Decimal copy() 
+    { 
+        var Decimal result;
+        var String str;
+        let str = toString();
+        let result = Decimal.new(str);
+        do str.dispose();
+        return result;
+    }
+
+    method void invert() { let positive = ~positive; return; }
+
+    method Decimal opposite() 
+    { 
+        var Decimal result;
+        do invert();
+        let result = copy();
+        do invert();
+        return result;
+    }
+
+    method int pointIndex(String str) 
+    {
+        var int i;
+        let i = 0;
+        while (i < str.length()) {
+            if (str.charAt(i) = 46) {
+                return i; }
+            let i = i + 1; }
+        return i;
+    }
+
+    method bool isPositive() { return positive; }
+    method bool isFraction() { return fraction; }
+
+    method int getIntPtr() 
+    {
+        var int i;
+        let i = 7;
+        while (i > 0) {
+            let i = i - 1;
+            if (getDigit(i) > 0) {
+                return i; } }
+        return i;
+    }
+
+    method int getFracPtr() 
+    {
+        var int i;
+        let i = -7;
+        while (i < 0) {
+            let i = i + 1;
+            if (getDigit(i) > 0) {
+                return i; } }
+        return i;
+    }
+
+    method int getDigit(int i) { return digits[6-i]; }
+    method void setDigit(int i, int value) { let digits[6-i] = value; return; }
+    method void addToDigit(int i, int value) { let digits[6-i] = digits[6-i] + value; return; }
+
+    method int mod10(int n) { return n - (n / 10 * 10); }
+    method int pow10(int n) { 
+        if (n = 0) { return 1; }
+        if (n = 1) { return 10; }
+        if (n = 2) { return 100; }
+        if (n = 3) { return 1000; }
+        return 10000; }
+    method boolean oneOf(boolean a, boolean b) { return (a | b) & ~(a & b); }
+    
+    method int charToInt(Char c) { return c - 48; }
+    method Char intToChar(int i) { return i + 48; }
+
+    method void dispose() 
+    {
+        do Memory.deAlloc(this);
+        do digits.dispose();
+        return;
+    }
+}

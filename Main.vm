@@ -1,0 +1,42 @@
+function Main.main 3
+push constant 0
+pop local 0
+push constant 22
+pop local 1
+push constant 0
+not
+pop local 2
+push constant 0
+push constant 240
+push constant 511
+push constant 241
+call Screen.drawRectangle 4
+pop temp 0
+push local 1
+push local 0
+call Output.moveCursor 2
+pop temp 0
+push constant 0
+call String.new 1
+call Keyboard.readLine 1
+call Graph.init 1
+pop temp 0
+call Graph.draw 0
+pop temp 0
+label WHILE_EXP0
+push local 2
+not
+if-goto WHILE_END0
+call Keyboard.readChar 0
+push constant 140
+eq
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 0
+pop local 2
+label IF_FALSE0
+goto WHILE_EXP0
+label WHILE_END0
+push constant 0
+return

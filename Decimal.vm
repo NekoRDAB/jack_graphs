@@ -1,0 +1,1052 @@
+function Decimal.new 2
+push constant 3
+call Memory.alloc 1
+pop pointer 0
+push argument 0
+push constant 0
+call String.charAt 2
+push constant 45
+eq
+not
+pop this 0
+push constant 13
+call ArrayExtension.zeros 1
+pop this 2
+push pointer 0
+push argument 0
+call Decimal.pointIndex 2
+pop local 0
+push local 0
+push argument 0
+call String.length 1
+lt
+pop this 1
+push local 0
+pop local 1
+label WHILE_EXP0
+push local 1
+push constant 1
+gt
+not
+if-goto WHILE_END0
+push local 1
+push constant 1
+sub
+pop local 1
+push pointer 0
+push local 0
+push local 1
+sub
+push constant 1
+sub
+push pointer 0
+push argument 0
+push local 1
+call String.charAt 2
+call Decimal.charToInt 2
+call Decimal.setDigit 3
+pop temp 0
+goto WHILE_EXP0
+label WHILE_END0
+push this 0
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push pointer 0
+push local 0
+push constant 1
+sub
+push pointer 0
+push argument 0
+push constant 0
+call String.charAt 2
+call Decimal.charToInt 2
+call Decimal.setDigit 3
+pop temp 0
+label IF_FALSE0
+push this 1
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push local 0
+pop local 1
+label WHILE_EXP1
+push local 1
+push argument 0
+call String.length 1
+push constant 1
+sub
+lt
+not
+if-goto WHILE_END1
+push local 1
+push constant 1
+add
+pop local 1
+push pointer 0
+push local 0
+push local 1
+sub
+push pointer 0
+push argument 0
+push local 1
+call String.charAt 2
+call Decimal.charToInt 2
+call Decimal.setDigit 3
+pop temp 0
+goto WHILE_EXP1
+label WHILE_END1
+label IF_FALSE1
+push argument 0
+call String.dispose 1
+pop temp 0
+push pointer 0
+return
+function Decimal.fromInt 1
+push constant 3
+call Memory.alloc 1
+pop pointer 0
+push constant 13
+call ArrayExtension.zeros 1
+pop this 2
+push constant 0
+pop local 0
+push argument 0
+push constant 0
+gt
+pop this 0
+push argument 0
+push constant 0
+lt
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push argument 0
+neg
+pop argument 0
+label IF_FALSE0
+label WHILE_EXP0
+push argument 0
+push constant 0
+gt
+not
+if-goto WHILE_END0
+push pointer 0
+push local 0
+push pointer 0
+push argument 0
+call Decimal.mod10 2
+call Decimal.setDigit 3
+pop temp 0
+push argument 0
+push constant 10
+call Math.divide 2
+pop argument 0
+push local 0
+push constant 1
+add
+pop local 0
+goto WHILE_EXP0
+label WHILE_END0
+push pointer 0
+return
+function Decimal.toInt 2
+push argument 0
+pop pointer 0
+push constant 0
+pop local 1
+label WHILE_EXP0
+push local 1
+push pointer 0
+call Decimal.getIntPtr 1
+push constant 1
+add
+lt
+not
+if-goto WHILE_END0
+push local 0
+push pointer 0
+push local 1
+call Decimal.getDigit 2
+push pointer 0
+push local 1
+call Decimal.pow10 2
+call Math.multiply 2
+add
+pop local 0
+push local 1
+push constant 1
+add
+pop local 1
+goto WHILE_EXP0
+label WHILE_END0
+push this 0
+not
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push local 0
+neg
+pop local 0
+label IF_FALSE0
+push local 0
+return
+function Decimal.add 4
+push argument 0
+pop pointer 0
+push this 0
+not
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push argument 1
+push pointer 0
+call Decimal.opposite 1
+call Decimal.sub 2
+return
+label IF_FALSE0
+push argument 1
+call Decimal.isPositive 1
+not
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push pointer 0
+push argument 1
+call Decimal.opposite 1
+call Decimal.sub 2
+return
+label IF_FALSE1
+push pointer 0
+call Decimal.copy 1
+pop local 0
+push argument 1
+call Decimal.getIntPtr 1
+pop local 1
+push argument 1
+call Decimal.getFracPtr 1
+pop local 2
+push local 2
+pop local 3
+label WHILE_EXP0
+push local 3
+push local 1
+push constant 1
+add
+lt
+not
+if-goto WHILE_END0
+push local 0
+push local 3
+call Decimal.getDigit 2
+push constant 9
+gt
+if-goto IF_TRUE2
+goto IF_FALSE2
+label IF_TRUE2
+push local 0
+push local 3
+push constant 10
+neg
+call Decimal.addToDigit 3
+pop temp 0
+push local 0
+push local 3
+push constant 1
+add
+push constant 1
+call Decimal.addToDigit 3
+pop temp 0
+label IF_FALSE2
+push local 0
+push local 3
+push argument 1
+push local 3
+call Decimal.getDigit 2
+call Decimal.addToDigit 3
+pop temp 0
+push local 0
+push local 3
+call Decimal.getDigit 2
+push constant 9
+gt
+if-goto IF_TRUE3
+goto IF_FALSE3
+label IF_TRUE3
+push local 0
+push local 3
+push constant 10
+neg
+call Decimal.addToDigit 3
+pop temp 0
+push local 0
+push local 3
+push constant 1
+add
+push constant 1
+call Decimal.addToDigit 3
+pop temp 0
+label IF_FALSE3
+push local 3
+push constant 1
+add
+pop local 3
+goto WHILE_EXP0
+label WHILE_END0
+push local 0
+return
+function Decimal.addToThis 3
+push argument 0
+pop pointer 0
+push argument 1
+call Decimal.getIntPtr 1
+pop local 0
+push argument 1
+call Decimal.getFracPtr 1
+pop local 1
+push local 1
+pop local 2
+label WHILE_EXP0
+push local 2
+push local 0
+push constant 1
+add
+lt
+not
+if-goto WHILE_END0
+push pointer 0
+push local 2
+call Decimal.getDigit 2
+push constant 9
+gt
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push pointer 0
+push local 2
+push constant 10
+neg
+call Decimal.addToDigit 3
+pop temp 0
+push pointer 0
+push local 2
+push constant 1
+add
+push constant 1
+call Decimal.addToDigit 3
+pop temp 0
+label IF_FALSE0
+push pointer 0
+push local 2
+push argument 1
+push local 2
+call Decimal.getDigit 2
+call Decimal.addToDigit 3
+pop temp 0
+push pointer 0
+push local 2
+call Decimal.getDigit 2
+push constant 9
+gt
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push pointer 0
+push local 2
+push constant 10
+neg
+call Decimal.addToDigit 3
+pop temp 0
+push pointer 0
+push local 2
+push constant 1
+add
+push constant 1
+call Decimal.addToDigit 3
+pop temp 0
+label IF_FALSE1
+push local 2
+push constant 1
+add
+pop local 2
+goto WHILE_EXP0
+label WHILE_END0
+push constant 0
+return
+function Decimal.sub 4
+push argument 0
+pop pointer 0
+push argument 1
+push pointer 0
+call Decimal.greater 2
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push argument 1
+push pointer 0
+call Decimal.sub 2
+pop local 0
+push local 0
+call Decimal.invert 1
+pop temp 0
+push local 0
+return
+label IF_FALSE0
+push this 0
+not
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push pointer 0
+call Decimal.invert 1
+pop temp 0
+push pointer 0
+push argument 1
+call Decimal.add 2
+pop local 0
+push pointer 0
+call Decimal.invert 1
+pop temp 0
+push local 0
+call Decimal.invert 1
+pop temp 0
+push local 0
+return
+label IF_FALSE1
+push argument 1
+call Decimal.isPositive 1
+not
+if-goto IF_TRUE2
+goto IF_FALSE2
+label IF_TRUE2
+push argument 1
+call Decimal.invert 1
+pop temp 0
+push pointer 0
+push argument 1
+call Decimal.add 2
+pop local 0
+push argument 1
+call Decimal.invert 1
+pop temp 0
+push local 0
+return
+label IF_FALSE2
+push pointer 0
+call Decimal.copy 1
+pop local 0
+push argument 1
+call Decimal.getIntPtr 1
+pop local 1
+push argument 1
+call Decimal.getFracPtr 1
+pop local 2
+push local 2
+pop local 3
+label WHILE_EXP0
+push local 3
+push local 1
+push constant 1
+add
+lt
+not
+if-goto WHILE_END0
+push local 0
+push local 3
+call Decimal.getDigit 2
+push constant 0
+lt
+if-goto IF_TRUE3
+goto IF_FALSE3
+label IF_TRUE3
+push local 0
+push local 3
+push constant 10
+call Decimal.addToDigit 3
+pop temp 0
+push local 0
+push local 3
+push constant 1
+add
+push constant 1
+neg
+call Decimal.addToDigit 3
+pop temp 0
+label IF_FALSE3
+push local 0
+push local 3
+push argument 1
+push local 3
+call Decimal.getDigit 2
+neg
+call Decimal.addToDigit 3
+pop temp 0
+push local 0
+push local 3
+call Decimal.getDigit 2
+push constant 0
+lt
+if-goto IF_TRUE4
+goto IF_FALSE4
+label IF_TRUE4
+push local 0
+push local 3
+push constant 10
+call Decimal.addToDigit 3
+pop temp 0
+push local 0
+push local 3
+push constant 1
+add
+push constant 1
+neg
+call Decimal.addToDigit 3
+pop temp 0
+label IF_FALSE4
+push local 3
+push constant 1
+add
+pop local 3
+goto WHILE_EXP0
+label WHILE_END0
+push local 0
+return
+function Decimal.mult 3
+push argument 0
+pop pointer 0
+push constant 1
+call String.new 1
+push constant 48
+call String.appendChar 2
+call Decimal.new 1
+pop local 1
+push argument 1
+call Decimal.getFracPtr 1
+pop local 0
+label WHILE_EXP0
+push local 0
+push argument 1
+call Decimal.getIntPtr 1
+push constant 1
+add
+lt
+not
+if-goto WHILE_END0
+push pointer 0
+push argument 1
+push local 0
+call Decimal.getDigit 2
+push local 0
+call Decimal.multByDigit 3
+pop local 2
+push local 1
+push local 2
+call Decimal.addToThis 2
+pop temp 0
+push local 2
+call Decimal.dispose 1
+pop temp 0
+push local 0
+push constant 1
+add
+pop local 0
+goto WHILE_EXP0
+label WHILE_END0
+push pointer 0
+push this 0
+push argument 1
+call Decimal.isPositive 1
+call Decimal.oneOf 3
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push local 1
+call Decimal.invert 1
+pop temp 0
+label IF_FALSE0
+push local 1
+return
+function Decimal.multByDigit 2
+push argument 0
+pop pointer 0
+push constant 1
+call String.new 1
+push constant 48
+call String.appendChar 2
+call Decimal.new 1
+pop local 1
+push pointer 0
+call Decimal.getFracPtr 1
+pop local 0
+label WHILE_EXP0
+push local 0
+push pointer 0
+call Decimal.getIntPtr 1
+push constant 1
+add
+lt
+not
+if-goto WHILE_END0
+push local 1
+push local 0
+push argument 2
+add
+push pointer 0
+push local 0
+call Decimal.getDigit 2
+push argument 1
+call Math.multiply 2
+call Decimal.addToDigit 3
+pop temp 0
+push local 1
+push local 0
+push argument 2
+add
+push constant 1
+add
+push local 1
+push local 0
+push argument 2
+add
+call Decimal.getDigit 2
+push constant 10
+call Math.divide 2
+call Decimal.addToDigit 3
+pop temp 0
+push local 1
+push local 0
+push argument 2
+add
+push pointer 0
+push local 1
+push local 0
+push argument 2
+add
+call Decimal.getDigit 2
+call Decimal.mod10 2
+call Decimal.setDigit 3
+pop temp 0
+push local 0
+push constant 1
+add
+pop local 0
+goto WHILE_EXP0
+label WHILE_END0
+push local 1
+return
+function Decimal.pow 3
+push argument 0
+pop pointer 0
+push constant 0
+pop local 2
+push pointer 0
+call Decimal.copy 1
+pop local 1
+label WHILE_EXP0
+push local 2
+push argument 1
+push constant 1
+sub
+lt
+not
+if-goto WHILE_END0
+push local 1
+push pointer 0
+call Decimal.mult 2
+pop local 0
+push local 1
+call Decimal.dispose 1
+pop temp 0
+push local 0
+pop local 1
+push local 2
+push constant 1
+add
+pop local 2
+goto WHILE_EXP0
+label WHILE_END0
+push local 1
+return
+function Decimal.greater 1
+push argument 0
+pop pointer 0
+push pointer 0
+call Decimal.getIntPtr 1
+push argument 1
+call Decimal.getIntPtr 1
+call Math.max 2
+pop local 0
+label WHILE_EXP0
+push local 0
+push constant 7
+neg
+gt
+not
+if-goto WHILE_END0
+push pointer 0
+push local 0
+call Decimal.getDigit 2
+push argument 1
+push local 0
+call Decimal.getDigit 2
+gt
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 0
+not
+return
+label IF_FALSE0
+push pointer 0
+push local 0
+call Decimal.getDigit 2
+push argument 1
+push local 0
+call Decimal.getDigit 2
+lt
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push constant 0
+return
+label IF_FALSE1
+push local 0
+push constant 1
+sub
+pop local 0
+goto WHILE_EXP0
+label WHILE_END0
+push constant 0
+return
+function Decimal.toString 2
+push argument 0
+pop pointer 0
+push constant 15
+call String.new 1
+pop local 0
+push this 0
+not
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push local 0
+push constant 45
+call String.appendChar 2
+pop temp 0
+label IF_FALSE0
+push pointer 0
+call Decimal.getIntPtr 1
+pop local 1
+label WHILE_EXP0
+push local 1
+push pointer 0
+call Decimal.getFracPtr 1
+push constant 1
+sub
+gt
+not
+if-goto WHILE_END0
+push local 1
+push constant 1
+neg
+eq
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push local 0
+push constant 46
+call String.appendChar 2
+pop temp 0
+label IF_FALSE1
+push local 0
+push pointer 0
+push pointer 0
+push local 1
+call Decimal.getDigit 2
+call Decimal.intToChar 2
+call String.appendChar 2
+pop temp 0
+push local 1
+push constant 1
+sub
+pop local 1
+goto WHILE_EXP0
+label WHILE_END0
+push local 0
+return
+function Decimal.copy 2
+push argument 0
+pop pointer 0
+push pointer 0
+call Decimal.toString 1
+pop local 1
+push local 1
+call Decimal.new 1
+pop local 0
+push local 1
+call String.dispose 1
+pop temp 0
+push local 0
+return
+function Decimal.invert 0
+push argument 0
+pop pointer 0
+push this 0
+not
+pop this 0
+push constant 0
+return
+function Decimal.opposite 1
+push argument 0
+pop pointer 0
+push pointer 0
+call Decimal.invert 1
+pop temp 0
+push pointer 0
+call Decimal.copy 1
+pop local 0
+push pointer 0
+call Decimal.invert 1
+pop temp 0
+push local 0
+return
+function Decimal.pointIndex 1
+push argument 0
+pop pointer 0
+push constant 0
+pop local 0
+label WHILE_EXP0
+push local 0
+push argument 1
+call String.length 1
+lt
+not
+if-goto WHILE_END0
+push argument 1
+push local 0
+call String.charAt 2
+push constant 46
+eq
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push local 0
+return
+label IF_FALSE0
+push local 0
+push constant 1
+add
+pop local 0
+goto WHILE_EXP0
+label WHILE_END0
+push local 0
+return
+function Decimal.isPositive 0
+push argument 0
+pop pointer 0
+push this 0
+return
+function Decimal.isFraction 0
+push argument 0
+pop pointer 0
+push this 1
+return
+function Decimal.getIntPtr 1
+push argument 0
+pop pointer 0
+push constant 7
+pop local 0
+label WHILE_EXP0
+push local 0
+push constant 0
+gt
+not
+if-goto WHILE_END0
+push local 0
+push constant 1
+sub
+pop local 0
+push pointer 0
+push local 0
+call Decimal.getDigit 2
+push constant 0
+gt
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push local 0
+return
+label IF_FALSE0
+goto WHILE_EXP0
+label WHILE_END0
+push local 0
+return
+function Decimal.getFracPtr 1
+push argument 0
+pop pointer 0
+push constant 7
+neg
+pop local 0
+label WHILE_EXP0
+push local 0
+push constant 0
+lt
+not
+if-goto WHILE_END0
+push local 0
+push constant 1
+add
+pop local 0
+push pointer 0
+push local 0
+call Decimal.getDigit 2
+push constant 0
+gt
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push local 0
+return
+label IF_FALSE0
+goto WHILE_EXP0
+label WHILE_END0
+push local 0
+return
+function Decimal.getDigit 0
+push argument 0
+pop pointer 0
+push constant 6
+push argument 1
+sub
+push this 2
+add
+pop pointer 1
+push that 0
+return
+function Decimal.setDigit 0
+push argument 0
+pop pointer 0
+push constant 6
+push argument 1
+sub
+push this 2
+add
+push argument 2
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push constant 0
+return
+function Decimal.addToDigit 0
+push argument 0
+pop pointer 0
+push constant 6
+push argument 1
+sub
+push this 2
+add
+push constant 6
+push argument 1
+sub
+push this 2
+add
+pop pointer 1
+push that 0
+push argument 2
+add
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push constant 0
+return
+function Decimal.mod10 0
+push argument 0
+pop pointer 0
+push argument 1
+push argument 1
+push constant 10
+call Math.divide 2
+push constant 10
+call Math.multiply 2
+sub
+return
+function Decimal.pow10 0
+push argument 0
+pop pointer 0
+push argument 1
+push constant 0
+eq
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 1
+return
+label IF_FALSE0
+push argument 1
+push constant 1
+eq
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push constant 10
+return
+label IF_FALSE1
+push argument 1
+push constant 2
+eq
+if-goto IF_TRUE2
+goto IF_FALSE2
+label IF_TRUE2
+push constant 100
+return
+label IF_FALSE2
+push argument 1
+push constant 3
+eq
+if-goto IF_TRUE3
+goto IF_FALSE3
+label IF_TRUE3
+push constant 1000
+return
+label IF_FALSE3
+push constant 10000
+return
+function Decimal.oneOf 0
+push argument 0
+pop pointer 0
+push argument 1
+push argument 2
+or
+push argument 1
+push argument 2
+and
+not
+and
+return
+function Decimal.charToInt 0
+push argument 0
+pop pointer 0
+push argument 1
+push constant 48
+sub
+return
+function Decimal.intToChar 0
+push argument 0
+pop pointer 0
+push argument 1
+push constant 48
+add
+return
+function Decimal.dispose 0
+push argument 0
+pop pointer 0
+push pointer 0
+call Memory.deAlloc 1
+pop temp 0
+push this 2
+call Array.dispose 1
+pop temp 0
+push constant 0
+return

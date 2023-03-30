@@ -1,0 +1,55 @@
+class Graph
+{
+    static int centerX, centerY;
+    static Decimal scaleX, scaleY;
+    static Expression func;
+
+    function void init(String str)
+    {
+        var int x, y;
+        let func = Expression.new(str);
+        let centerX = 256;
+        let centerY = 192;
+        let scaleX = Decimal.new("0.01");
+        let scaleY = Decimal.new("20");
+        let x = 0;
+        while (x < 511) {
+            do Screen.drawPixel(x, centerY);
+            let x = x + 2; }
+        let y = 0;
+        while (y < 242) {
+            do Screen.drawPixel(centerX, y);
+            let y = y + 2; }
+        return;
+    }
+
+    function void draw()
+    {
+        var int scrX;
+        let scrX = 0;
+        while (scrX < 512) {
+            do Graph.drawPoint(scrX);
+            let scrX = scrX + 1; }
+        return;
+    }
+
+    function void drawPoint(int screenX)
+    {
+        var int screenY;
+        var Decimal scaledY, distX, funcX, funcY;
+
+        let distX = Decimal.fromInt(screenX - centerX);
+        let funcX = distX.mult(scaleX);
+        let funcY = func.eval(funcX);
+        let scaledY = funcY.mult(scaleY);
+        let screenY = centerY - scaledY.toInt();
+        if ((-1 < screenY) & (screenY < 256)) {
+            do Screen.drawPixel(screenX, screenY); }
+        
+        do distX.dispose();
+        do funcX.dispose();
+        do funcY.dispose();
+        do scaledY.dispose();
+        return;
+    }
+}
