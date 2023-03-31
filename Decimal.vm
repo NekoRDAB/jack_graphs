@@ -9,7 +9,7 @@ push constant 45
 eq
 not
 pop this 0
-push constant 13
+push constant 19
 call ArrayExtension.zeros 1
 pop this 2
 push pointer 0
@@ -106,7 +106,7 @@ function Decimal.fromInt 1
 push constant 3
 call Memory.alloc 1
 pop pointer 0
-push constant 13
+push constant 19
 call ArrayExtension.zeros 1
 pop this 2
 push constant 0
@@ -721,7 +721,7 @@ return
 function Decimal.toString 2
 push argument 0
 pop pointer 0
-push constant 15
+push constant 21
 call String.new 1
 pop local 0
 push this 0
@@ -854,7 +854,7 @@ return
 function Decimal.getIntPtr 1
 push argument 0
 pop pointer 0
-push constant 7
+push constant 10
 pop local 0
 label WHILE_EXP0
 push local 0
@@ -884,7 +884,7 @@ return
 function Decimal.getFracPtr 1
 push argument 0
 pop pointer 0
-push constant 7
+push constant 10
 neg
 pop local 0
 label WHILE_EXP0
@@ -915,7 +915,7 @@ return
 function Decimal.getDigit 0
 push argument 0
 pop pointer 0
-push constant 6
+push constant 9
 push argument 1
 sub
 push this 2
@@ -926,7 +926,7 @@ return
 function Decimal.setDigit 0
 push argument 0
 pop pointer 0
-push constant 6
+push constant 9
 push argument 1
 sub
 push this 2
@@ -941,12 +941,12 @@ return
 function Decimal.addToDigit 0
 push argument 0
 pop pointer 0
-push constant 6
+push constant 9
 push argument 1
 sub
 push this 2
 add
-push constant 6
+push constant 9
 push argument 1
 sub
 push this 2

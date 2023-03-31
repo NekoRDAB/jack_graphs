@@ -7,7 +7,7 @@ class Decimal
     {
         var int dot, i;
         let positive = ~(str.charAt(0) = 45);
-        let digits = ArrayExtension.zeros(13);
+        let digits = ArrayExtension.zeros(19);
         let dot = pointIndex(str);
         let fraction = (dot < str.length());
 
@@ -31,7 +31,7 @@ class Decimal
     constructor Decimal fromInt(int value) 
     {
         var int i;
-        let digits = ArrayExtension.zeros(13);
+        let digits = ArrayExtension.zeros(19);
         let i = 0;
         let positive = (value > 0);
         if (value < 0) {
@@ -155,7 +155,7 @@ class Decimal
         let i = other.getFracPtr();
         while (i < (other.getIntPtr() + 1)) {
             let term = multByDigit(other.getDigit(i), i);
-            do result.addToThis(term); ////
+            do result.addToThis(term);
             do term.dispose();
             let i = i + 1; }
         if (oneOf(positive, other.isPositive())) {
@@ -208,7 +208,7 @@ class Decimal
     {   
         var String str;
         var int i;
-        let str = String.new(15);
+        let str = String.new(21);
 
         if (~positive) {
             do str.appendChar(45); }
@@ -261,7 +261,7 @@ class Decimal
     method int getIntPtr() 
     {
         var int i;
-        let i = 7;
+        let i = 10;
         while (i > 0) {
             let i = i - 1;
             if (getDigit(i) > 0) {
@@ -272,7 +272,7 @@ class Decimal
     method int getFracPtr() 
     {
         var int i;
-        let i = -7;
+        let i = -10;
         while (i < 0) {
             let i = i + 1;
             if (getDigit(i) > 0) {
@@ -280,9 +280,9 @@ class Decimal
         return i;
     }
 
-    method int getDigit(int i) { return digits[6-i]; }
-    method void setDigit(int i, int value) { let digits[6-i] = value; return; }
-    method void addToDigit(int i, int value) { let digits[6-i] = digits[6-i] + value; return; }
+    method int getDigit(int i) { return digits[9-i]; }
+    method void setDigit(int i, int value) { let digits[9-i] = value; return; }
+    method void addToDigit(int i, int value) { let digits[9-i] = digits[9-i] + value; return; }
 
     method int mod10(int n) { return n - (n / 10 * 10); }
     method int pow10(int n) { 

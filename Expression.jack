@@ -18,14 +18,14 @@ class Expression
         let value = String.new(15);
         while (i < str.length()) {
             let c = str.charAt(i);
-            if ((47 < c) & (c < 58)) {
+            if ((c = 46) | ((47 < c) & (c < 58))) {
                 do value.appendChar(c);
                 let c = str.charAt(i + 1); 
-                if (~((47 < c) & (c < 58))) {
+                if (~((c = 46) | ((47 < c) & (c < 58)))) {
                     let actions[actionPtr] = Decimal.new(value);
                     let value = String.new(15);
                     let actionTypes[actionPtr] = 1;
-                    let actionPtr = actionPtr + 1; } }
+                    let actionPtr = actionPtr + 1; } }//frac error
             if (c = 43) {//+
                 let actions[actionPtr] = 0;
                 let actionTypes[actionPtr] = 2;
@@ -46,21 +46,20 @@ class Expression
                 let actionTypes[actionPtr] = 3;
                 let actionPtr = actionPtr + 1; }
             let i = i + 1; }
-        let i = 0;
-        while(i < actionPtr){do Output.printInt(actions[actionPtr]); do Output.printString(" "); let i = i + 1;}
         return this;
     }
 
     method Decimal eval(Decimal x)  //
     {
         var int i;
-        var Decimal val1, val2, res;
+        var Decimal val, val1, val2, res;
 
         let i = 0;
         while (actionTypes[i] > 0) 
         {
             if (actionTypes[i] = 1) {
-                do stack.Push(actions[i]); }
+                let val = actions[i];
+                do stack.Push(val.copy()); }
             
             if (actionTypes[i] = 2) {
                 let val2 = stack.Pop();
@@ -73,10 +72,12 @@ class Expression
                     let res = val1.mult(val2); }
                 if (actions[i] = 3) {
                     let res = val1.pow(val2.toInt()); }
-                do stack.Push(res); }
+                do stack.Push(res); 
+                do val1.dispose();
+                do val2.dispose(); }
             
             if (actionTypes[i] = 3) {
-                do stack.Push(x); }
+                do stack.Push(x.copy()); }
             
             let i = i + 1; 
         }
