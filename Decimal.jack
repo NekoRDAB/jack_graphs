@@ -6,23 +6,23 @@ class Decimal
     constructor Decimal new(String str)
     {
         var int dot, i;
-        let positive = ~(str.charAt(0) = 45);
-        let digits = ArrayExtension.zeros(19);
+        let positive = ~CharX.areEqual(str.charAt(0), "-");
+        let digits = ArrayX.zeros(19);
         let dot = pointIndex(str);
         let fraction = (dot < str.length());
 
         let i = dot;
         while (i > 1) {
             let i = i - 1;
-            do setDigit(dot - i - 1, charToInt(str.charAt(i))); }
+            do setDigit(dot - i - 1, CharX.toInt(str.charAt(i))); }
         if (positive) {
-            do setDigit(dot - 1, charToInt(str.charAt(0))); }
+            do setDigit(dot - 1, CharX.toInt(str.charAt(0))); }
 
         if (fraction) {
             let i = dot;
             while (i < (str.length() - 1)) {
                 let i = i + 1;
-                do setDigit(dot - i, charToInt(str.charAt(i))); } }
+                do setDigit(dot - i, CharX.toInt(str.charAt(i))); } }
 
         do str.dispose();
         return this;
@@ -31,7 +31,7 @@ class Decimal
     constructor Decimal fromInt(int value) 
     {
         var int i;
-        let digits = ArrayExtension.zeros(19);
+        let digits = ArrayX.zeros(19);
         let i = 0;
         let positive = (value > 0);
         if (value < 0) {
@@ -149,15 +149,15 @@ class Decimal
 
     method Decimal mult(Decimal other)
     {
-        var int i;
+        var int exp;
         var Decimal result, term;
         let result = Decimal.new("0");
-        let i = other.getFracPtr();
-        while (i < (other.getIntPtr() + 1)) {
-            let term = multByDigit(other.getDigit(i), i);
+        let exp = other.getFracPtr();
+        while (exp < (other.getIntPtr() + 1)) {
+            let term = multByDigit(other.getDigit(exp), exp);
             do result.addToThis(term);
             do term.dispose();
-            let i = i + 1; }
+            let exp = exp + 1; }
         if (oneOf(positive, other.isPositive())) {
             do result.invert(); }
         return result;
@@ -168,11 +168,11 @@ class Decimal
         var int i;
         var Decimal result;
         let result = Decimal.new("0");
-        let i = getFracPtr();
-        while (i < (getIntPtr() + 1)) {
-            do result.addToDigit(i + exp, getDigit(i) * digit);
-            do result.addToDigit(i + exp + 1, result.getDigit(i + exp) / 10);
-            do result.setDigit(i + exp, mod10(result.getDigit(i + exp)));
+        let i = Math.max(getFracPtr() + exp, -9);
+        while (i < (getIntPtr() + 1 + exp)) {
+            do result.addToDigit(i, getDigit(i - exp) * digit);
+            do result.addToDigit(i + 1, result.getDigit(i) / 10);
+            do result.setDigit(i, mod10(result.getDigit(i)));
             let i = i + 1; }
         return result;
     }
@@ -206,21 +206,21 @@ class Decimal
 
     method String toString()
     {   
-        var String str;
+        var String result;
         var int i;
-        let str = String.new(21);
+        let result = String.new(21);
 
         if (~positive) {
-            do str.appendChar(45); }
+            do StringX.appendTo(result, "-"); }
         
         let i = getIntPtr();
         while (i > (getFracPtr() - 1)) {
             if (i = -1) {
-                do str.appendChar(46); }
-            do str.appendChar(intToChar(getDigit(i)));
+                do StringX.appendTo(result, "."); }
+            do result.appendChar(intToChar(getDigit(i)));
             let i = i - 1; }
         
-        return str;
+        return result;
     }
 
     method Decimal copy() 
@@ -249,7 +249,7 @@ class Decimal
         var int i;
         let i = 0;
         while (i < str.length()) {
-            if (str.charAt(i) = 46) {
+            if (CharX.areEqual(str.charAt(i), ".")) {
                 return i; }
             let i = i + 1; }
         return i;

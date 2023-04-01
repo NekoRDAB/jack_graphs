@@ -5,12 +5,15 @@ pop pointer 0
 push argument 0
 push constant 0
 call String.charAt 2
+push constant 1
+call String.new 1
 push constant 45
-eq
+call String.appendChar 2
+call CharX.areEqual 2
 not
 pop this 0
 push constant 19
-call ArrayExtension.zeros 1
+call ArrayX.zeros 1
 pop this 2
 push pointer 0
 push argument 0
@@ -39,11 +42,10 @@ push local 1
 sub
 push constant 1
 sub
-push pointer 0
 push argument 0
 push local 1
 call String.charAt 2
-call Decimal.charToInt 2
+call CharX.toInt 1
 call Decimal.setDigit 3
 pop temp 0
 goto WHILE_EXP0
@@ -56,11 +58,10 @@ push pointer 0
 push local 0
 push constant 1
 sub
-push pointer 0
 push argument 0
 push constant 0
 call String.charAt 2
-call Decimal.charToInt 2
+call CharX.toInt 1
 call Decimal.setDigit 3
 pop temp 0
 label IF_FALSE0
@@ -87,11 +88,10 @@ push pointer 0
 push local 0
 push local 1
 sub
-push pointer 0
 push argument 0
 push local 1
 call String.charAt 2
-call Decimal.charToInt 2
+call CharX.toInt 1
 call Decimal.setDigit 3
 pop temp 0
 goto WHILE_EXP1
@@ -107,7 +107,7 @@ push constant 3
 call Memory.alloc 1
 pop pointer 0
 push constant 19
-call ArrayExtension.zeros 1
+call ArrayX.zeros 1
 pop this 2
 push constant 0
 pop local 0
@@ -577,6 +577,11 @@ call Decimal.new 1
 pop local 1
 push pointer 0
 call Decimal.getFracPtr 1
+push argument 2
+add
+push constant 9
+neg
+call Math.max 2
 pop local 0
 label WHILE_EXP0
 push local 0
@@ -584,15 +589,17 @@ push pointer 0
 call Decimal.getIntPtr 1
 push constant 1
 add
+push argument 2
+add
 lt
 not
 if-goto WHILE_END0
 push local 1
 push local 0
-push argument 2
-add
 push pointer 0
 push local 0
+push argument 2
+sub
 call Decimal.getDigit 2
 push argument 1
 call Math.multiply 2
@@ -600,14 +607,10 @@ call Decimal.addToDigit 3
 pop temp 0
 push local 1
 push local 0
-push argument 2
-add
 push constant 1
 add
 push local 1
 push local 0
-push argument 2
-add
 call Decimal.getDigit 2
 push constant 10
 call Math.divide 2
@@ -615,13 +618,9 @@ call Decimal.addToDigit 3
 pop temp 0
 push local 1
 push local 0
-push argument 2
-add
 push pointer 0
 push local 1
 push local 0
-push argument 2
-add
 call Decimal.getDigit 2
 call Decimal.mod10 2
 call Decimal.setDigit 3
@@ -730,8 +729,11 @@ if-goto IF_TRUE0
 goto IF_FALSE0
 label IF_TRUE0
 push local 0
+push constant 1
+call String.new 1
 push constant 45
 call String.appendChar 2
+call StringX.appendTo 2
 pop temp 0
 label IF_FALSE0
 push pointer 0
@@ -754,8 +756,11 @@ if-goto IF_TRUE1
 goto IF_FALSE1
 label IF_TRUE1
 push local 0
+push constant 1
+call String.new 1
 push constant 46
 call String.appendChar 2
+call StringX.appendTo 2
 pop temp 0
 label IF_FALSE1
 push local 0
@@ -825,8 +830,11 @@ if-goto WHILE_END0
 push argument 1
 push local 0
 call String.charAt 2
+push constant 1
+call String.new 1
 push constant 46
-eq
+call String.appendChar 2
+call CharX.areEqual 2
 if-goto IF_TRUE0
 goto IF_FALSE0
 label IF_TRUE0

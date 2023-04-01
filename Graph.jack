@@ -6,20 +6,46 @@ class Graph
 
     function void init(String str)
     {
-        var int x, y;
+        var int mark, x, y;
         let func = Expression.new(str);
         let centerX = 256;
         let centerY = 192;
         let scaleX = Decimal.new("0.01");
         let scaleY = Decimal.new("20");
+
+        let mark = 0;
         let x = 0;
         while (x < 511) {
             do Screen.drawPixel(x, centerY);
             let x = x + 2; }
+        let x = centerX;
+        while (x < 500) {
+            do ScreenX.printSmallInt(x, centerY + 5, mark);
+            let mark = mark + 1;
+            let x = x + 100; }
+        let x = centerX;
+        let mark = 0;
+        while (x > 12) {
+            do ScreenX.printSmallInt(x, centerY + 5, mark);
+            let mark = mark - 1;
+            let x = x - 100; }
+        
+        let mark = 0;
         let y = 0;
         while (y < 242) {
             do Screen.drawPixel(centerX, y);
             let y = y + 2; }
+        let y = centerY;
+        while (y < 240) {
+            do ScreenX.printSmallInt(centerX + 5, y, mark);
+            let mark = mark - 1;
+            let y = y + 20; }
+        let y = centerY;
+        let mark = 0;
+        while (y > 2) {
+            do ScreenX.printSmallInt(centerX + 5, y, mark);
+            let mark = mark + 1;
+            let y = y - 20; }
         return;
     }
 

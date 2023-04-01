@@ -1,0 +1,13 @@
+class StringX 
+{
+    function void appendTo(String that, String other)
+    {
+        var int i;
+        let i = 0;
+        while (i < other.length()) {
+            do that.appendChar(other.charAt(i));
+            let i = i + 1; }
+        do other.dispose();
+        return;
+    }
+}

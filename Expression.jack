@@ -10,9 +10,9 @@ class Expression
         var Char c;
 
         let stack = DStack.new(10);
-        let actions = ArrayExtension.zeros(30);
+        let actions = ArrayX.zeros(30);
         let actionPtr = 0;
-        let actionTypes = ArrayExtension.zeros(30);
+        let actionTypes = ArrayX.zeros(30);
 
         let i = 0;
         let value = String.new(15);

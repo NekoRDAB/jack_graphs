@@ -1,0 +1,79 @@
+class ScreenX
+{
+    function void printSmallInt(int x, int y, int value)
+    {
+        var int currentX, i;
+        var String str;
+        let str = String.new(5);
+        do str.setInt(value);
+        let currentX = x - (str.length() * 2) + 2;
+        let i = 0;
+        if (str.charAt(i) = 45) {
+            do ScreenX.printMinus(currentX, y);
+            let currentX = currentX + 4;
+            let i = i + 1; } 
+        while (i < str.length()) {
+            do ScreenX.printSmallDigit(currentX, y, str.charAt(i) - 48);
+            let currentX = currentX + 4;
+            let i = i + 1; }
+        return;
+    }
+
+    function void printSmallDigit(int x, int y, int d)
+    {
+        if (d = 0) {
+	        do Screen.drawLine(x-1, y-1, x-1, y+1);
+            do Screen.drawPixel(x, y-2);
+            do Screen.drawPixel(x, y+2);
+            do Screen.drawLine(x+1, y-1, x+1, y+1); }
+        if (d = 1) {
+	        do Screen.drawLine(x, y-2, x, y+2); }
+        if (d = 2) {
+	        do Screen.drawLine(x-1, y-2, x, y-2);
+            do Screen.drawLine(x+1, y-1, x-1, y+1);
+            do Screen.drawLine(x-1, y+2, x+1, y+2); }
+        if (d = 3) {
+	        do Screen.drawLine(x-1, y-2, x, y-2);
+            do Screen.drawLine(x-1, y, x, y);
+            do Screen.drawLine(x-1, y+2, x, y+2);
+            do Screen.drawPixel(x+1, y-1);
+            do Screen.drawPixel(x+1, y+1); }
+        if (d = 4) {
+            do Screen.drawLine(x-1, y-2, x-1, y);
+            do Screen.drawPixel(x, y);
+            do Screen.drawLine(x+1, y-2, x+1, y+2); }
+        if (d = 5) {
+	        do Screen.drawLine(x-1, y+2, x, y+2);
+            do Screen.drawLine(x+1, y+1, x-1, y-1);
+            do Screen.drawLine(x-1, y-2, x+1, y-2); }
+        if (d = 6) {
+            do Screen.drawLine(x, y-2, x+1, y-2);
+            do Screen.drawLine(x-1, y-1, x-1, y+1);
+            do Screen.drawPixel(x, y);
+            do Screen.drawLine(x+1, y, x+1, y+2);
+            do Screen.drawPixel(x, y+2); }
+        if (d = 7) {
+            do Screen.drawLine(x-1, y-2, x+1, y-2);
+            do Screen.drawPixel(x+1, y-1);
+            do Screen.drawLine(x, y, x, y+1);
+            do Screen.drawPixel(x-1, y+2); }
+        if (d = 8) {
+            do Screen.drawLine(x-1, y-2, x+1, y-2);
+            do Screen.drawLine(x-1, y-1, x+1, y+1);
+            do Screen.drawLine(x-1, y+1, x+1, y-1);
+            do Screen.drawLine(x-1, y+2, x+1, y+2); }
+        if (d = 9) {
+            do Screen.drawLine(x, y+2, x-1, y+2);
+            do Screen.drawLine(x+1, y+1, x+1, y-1);
+            do Screen.drawPixel(x, y);
+            do Screen.drawLine(x-1, y, x-1, y-2);
+            do Screen.drawPixel(x, y-2); }
+        return;
+    }
+
+    function void printMinus(int x, int y) 
+    {
+        do Screen.drawLine(x-1, y, x+1, y);
+        return;
+    }
+}

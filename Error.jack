@@ -1,0 +1,10 @@
+class Error 
+{
+    function void new(String message)
+    {
+        do Output.printString("Error: ");
+        do Output.printString(message);
+        do Sys.halt();
+        return;
+    }
+}

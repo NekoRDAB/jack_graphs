@@ -6,12 +6,12 @@ push constant 10
 call DStack.new 1
 pop this 0
 push constant 30
-call ArrayExtension.zeros 1
+call ArrayX.zeros 1
 pop this 1
 push constant 0
 pop local 1
 push constant 30
-call ArrayExtension.zeros 1
+call ArrayX.zeros 1
 pop this 2
 push constant 0
 pop local 2

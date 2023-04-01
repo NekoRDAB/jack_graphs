@@ -1,17 +1,22 @@
 class DStack 
 {
     field Array values;
-    field int top;
+    field int top, limit;
 
     constructor DStack new(int n) 
     {
-        let values = ArrayExtension.zeros(n);
+        if (n < 0) {
+            do Error.new("Incorrect size"); }
+        let values = ArrayX.zeros(n);
         let top = 0;
+        let limit = n;
         return this;
     }
 
     method void Push(Decimal value) 
     {
+        if (top = limit) {
+            do Error.new("Decimal stack overflow"); }
         let values[top] = value;
         let top = top + 1;
         return;
@@ -19,6 +24,8 @@ class DStack
 
     method Decimal Pop()
     {
+        if (top = 0) {
+            do Error.new("Decimal stack empty"); }
         let top = top - 1;
         return values[top];
     }

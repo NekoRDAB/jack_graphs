@@ -1,0 +1,29 @@
+class CharX 
+{
+    function Char toChar(String s)
+    {
+        if (~(s.length() = 1)) {
+            do Error.new("Is not char"); }
+        return s.charAt(0);
+    }
+
+    function bool areEqual(Char c1, String c2) 
+    {
+        var boolean equal;
+        let equal = c1 = c2.charAt(0);
+        do c2.dispose();
+        return equal;
+    }
+
+    function bool isDigit(Char c) 
+    {
+        return (47 < c) & (c < 58);
+    }
+
+    function int toInt(Char c)
+    {
+        if (~CharX.isDigit(c)) {
+            do Error.new("Is not digit"); }
+        return c - 48;
+    }
+}

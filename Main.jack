@@ -3,7 +3,6 @@ class Main
     function void main() 
     {
         var int cursorX, cursorY;
-        //var Expression expr;
         var boolean running;
 
         let cursorX = 0;
@@ -12,7 +11,6 @@ class Main
 
         do Screen.drawRectangle(0,240, 511,241);
         do Output.moveCursor(cursorY, cursorX);
-
         do Graph.init(Keyboard.readLine(""));
         do Graph.draw();
 
