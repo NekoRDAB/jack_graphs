@@ -4,21 +4,24 @@ class Main
     {
         var int cursorX, cursorY;
         var boolean running;
+        //var Decimal d1,d2;
 
         let cursorX = 0;
         let cursorY = 22;
         let running = true;
+        //let d1 = Decimal.new("0.9901");
+        //let d2 = Decimal.new("0.99");
+        //let d1 = d1.div(d2);
+        //do d1.print();
 
         do Screen.drawRectangle(0,240, 511,241);
         do Output.moveCursor(cursorY, cursorX);
         do Graph.init(Keyboard.readLine(""));
         do Graph.draw();
 
-        while (running)
-        {
+        while (running) {
             if (Keyboard.readChar() = 140) {
-                let running = false; }
-        }
+                let running = false; } }
 
         return;
     }

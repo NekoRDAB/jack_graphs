@@ -10,6 +10,8 @@ class CharX
     function bool areEqual(Char c1, String c2) 
     {
         var boolean equal;
+        if (~(c2.length() = 1)) {
+            do Error.new("Is not char"); }
         let equal = c1 = c2.charAt(0);
         do c2.dispose();
         return equal;
@@ -20,7 +22,14 @@ class CharX
         return (47 < c) & (c < 58);
     }
 
-    function int toInt(Char c)
+    function char fromDigit(int i)
+    {
+        if (i > 9) {
+            do Error.new("Is not digit"); }
+        return i + 48;
+    }
+
+    function int toDigit(Char c)
     {
         if (~CharX.isDigit(c)) {
             do Error.new("Is not digit"); }

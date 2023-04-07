@@ -39,6 +39,41 @@ push constant 0
 call String.charAt 2
 return
 function CharX.areEqual 1
+push argument 1
+call String.length 1
+push constant 1
+eq
+not
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 11
+call String.new 1
+push constant 73
+call String.appendChar 2
+push constant 115
+call String.appendChar 2
+push constant 32
+call String.appendChar 2
+push constant 110
+call String.appendChar 2
+push constant 111
+call String.appendChar 2
+push constant 116
+call String.appendChar 2
+push constant 32
+call String.appendChar 2
+push constant 99
+call String.appendChar 2
+push constant 104
+call String.appendChar 2
+push constant 97
+call String.appendChar 2
+push constant 114
+call String.appendChar 2
+call Error.new 1
+pop temp 0
+label IF_FALSE0
 push argument 0
 push argument 1
 push constant 0
@@ -59,7 +94,47 @@ push constant 58
 lt
 and
 return
-function CharX.toInt 0
+function CharX.fromDigit 0
+push argument 0
+push constant 9
+gt
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 12
+call String.new 1
+push constant 73
+call String.appendChar 2
+push constant 115
+call String.appendChar 2
+push constant 32
+call String.appendChar 2
+push constant 110
+call String.appendChar 2
+push constant 111
+call String.appendChar 2
+push constant 116
+call String.appendChar 2
+push constant 32
+call String.appendChar 2
+push constant 100
+call String.appendChar 2
+push constant 105
+call String.appendChar 2
+push constant 103
+call String.appendChar 2
+push constant 105
+call String.appendChar 2
+push constant 116
+call String.appendChar 2
+call Error.new 1
+pop temp 0
+label IF_FALSE0
+push argument 0
+push constant 48
+add
+return
+function CharX.toDigit 0
 push argument 0
 call CharX.isDigit 1
 not

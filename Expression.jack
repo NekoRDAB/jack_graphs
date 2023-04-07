@@ -18,32 +18,36 @@ class Expression
         let value = String.new(15);
         while (i < str.length()) {
             let c = str.charAt(i);
-            if ((c = 46) | ((47 < c) & (c < 58))) {
+            if (CharX.areEqual(c, ".") | CharX.isDigit(c)) {
                 do value.appendChar(c);
                 let c = str.charAt(i + 1); 
-                if (~((c = 46) | ((47 < c) & (c < 58)))) {
+                if (~(CharX.areEqual(c, ".") | CharX.isDigit(c))) {
                     let actions[actionPtr] = Decimal.new(value);
                     let value = String.new(15);
                     let actionTypes[actionPtr] = 1;
-                    let actionPtr = actionPtr + 1; } }//frac error
-            if (c = 43) {//+
+                    let actionPtr = actionPtr + 1; } }//minus error
+            if (CharX.areEqual(c, "X")) {
+                let actionTypes[actionPtr] = 3;
+                let actionPtr = actionPtr + 1; }
+            if (CharX.areEqual(c, "+")) {
                 let actions[actionPtr] = 0;
                 let actionTypes[actionPtr] = 2;
                 let actionPtr = actionPtr + 1; }
-            if (c = 45) {//-
+            if (CharX.areEqual(c, "-")) {
                 let actions[actionPtr] = 1;
                 let actionTypes[actionPtr] = 2;
                 let actionPtr = actionPtr + 1; }
-            if (c = 42) {//*
+            if (CharX.areEqual(c, "*")) {
                 let actions[actionPtr] = 2;
                 let actionTypes[actionPtr] = 2;
                 let actionPtr = actionPtr + 1; }
-            if (c = 94) {//^
+            if (CharX.areEqual(c, "^")) {
                 let actions[actionPtr] = 3;
                 let actionTypes[actionPtr] = 2;
                 let actionPtr = actionPtr + 1; }
-            if (c = 88) {//x
-                let actionTypes[actionPtr] = 3;
+            if (CharX.areEqual(c, "/")) {
+                let actions[actionPtr] = 4;
+                let actionTypes[actionPtr] = 2;
                 let actionPtr = actionPtr + 1; }
             let i = i + 1; }
         return this;
@@ -65,13 +69,15 @@ class Expression
                 let val2 = stack.Pop();
                 let val1 = stack.Pop();
                 if (actions[i] = 0) {
-                    let res = val1.add(val2); }
+                    let res = val1.plus(val2); }
                 if (actions[i] = 1) {
-                    let res = val1.sub(val2); }
+                    let res = val1.minus(val2); }
                 if (actions[i] = 2) {
                     let res = val1.mult(val2); }
                 if (actions[i] = 3) {
                     let res = val1.pow(val2.toInt()); }
+                if (actions[i] = 4) {
+                    let res = val1.div(val2); }
                 do stack.Push(res); 
                 do val1.dispose();
                 do val2.dispose(); }

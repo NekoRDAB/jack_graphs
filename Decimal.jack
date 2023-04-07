@@ -14,15 +14,15 @@ class Decimal
         let i = dot;
         while (i > 1) {
             let i = i - 1;
-            do setDigit(dot - i - 1, CharX.toInt(str.charAt(i))); }
+            do setDigit(dot - i - 1, CharX.toDigit(str.charAt(i))); }
         if (positive) {
-            do setDigit(dot - 1, CharX.toInt(str.charAt(0))); }
+            do setDigit(dot - 1, CharX.toDigit(str.charAt(0))); }
 
         if (fraction) {
             let i = dot;
             while (i < (str.length() - 1)) {
                 let i = i + 1;
-                do setDigit(dot - i, CharX.toInt(str.charAt(i))); } }
+                do setDigit(dot - i, CharX.toDigit(str.charAt(i))); } }
 
         do str.dispose();
         return this;
@@ -33,7 +33,7 @@ class Decimal
         var int i;
         let digits = ArrayX.zeros(19);
         let i = 0;
-        let positive = (value > 0);
+        let positive = (value > -1);
         if (value < 0) {
             let value = -value; }
         while (value > 0) {
@@ -55,15 +55,21 @@ class Decimal
         return value;
     }
 
-    method Decimal add(Decimal other)
+    method Decimal plus(Decimal other)
     {
         var Decimal result;
         var int intPtr, fracPtr, i;
 
         if (~positive) {
-            return other.sub(opposite()); }
+            do invert();
+            let result = other.minus(this);
+            do invert();
+            return result; }
         if (~other.isPositive()) {
-            return sub(other.opposite()); }
+            do other.invert();
+            let result = minus(other);
+            do other.invert();
+            return result; }
         
         let result = copy();
         let intPtr = other.getIntPtr();
@@ -83,14 +89,17 @@ class Decimal
         return result;
     }
 
-    method void addToThis(Decimal other)//
+    method void add(Decimal other)//
     {
         var int intPtr, fracPtr, i;
 
         //if (~positive) {
-            //return other.sub(opposite()); }
+            //... }
         //if (~other.isPositive()) {
-            //return sub(other.opposite()); }
+            //do other.invert();
+            //do sub(other);
+            //do other.invert();
+            //return; }
         
         let intPtr = other.getIntPtr();
         let fracPtr = other.getFracPtr();
@@ -108,25 +117,25 @@ class Decimal
         return;
     }
 
-    method Decimal sub(Decimal other)
+    method Decimal minus(Decimal other)
     {
         var Decimal result;
         var int intPtr, fracPtr, i;
 
-        if (other.greater(this)) {
-            let result = other.sub(this);
-            do result.invert();
-            return result; }
         if (~positive) {
             do invert();
-            let result = add(other);
+            let result = plus(other);
             do invert();
             do result.invert();
             return result; }
         if (~other.isPositive()) {
             do other.invert();
-            let result = add(other);
+            let result = plus(other);
             do other.invert();
+            return result; }
+        if (other.greater(this)) {
+            let result = other.minus(this);
+            do result.invert();
             return result; }
 
         let result = copy();
@@ -147,6 +156,40 @@ class Decimal
         return result;
     }
 
+    method void sub(Decimal other) //
+    {
+        var int intPtr, fracPtr, i;
+
+        //if (~positive) {
+            //do invert();
+            //do add(other);
+            //do invert();
+            //return; }
+        //if (~other.isPositive()) {
+            //do other.invert();
+            //do add(other);
+            //do other.invert();
+            //return; }
+        //if (other.greater(this)) {////////
+            //return; }
+
+        let intPtr = other.getIntPtr();
+        let fracPtr = other.getFracPtr();
+
+        let i = fracPtr;
+        while (i < (intPtr + 1)) {
+            if (getDigit(i) < 0) {
+                do addToDigit(i, 10);
+                do addToDigit(i + 1, -1); }
+            do addToDigit(i, -other.getDigit(i));
+            if (getDigit(i) < 0) {
+                do addToDigit(i, 10);
+                do addToDigit(i + 1, -1); } 
+            let i = i + 1; }
+        
+        return;
+    }
+
     method Decimal mult(Decimal other)
     {
         var int exp;
@@ -155,11 +198,37 @@ class Decimal
         let exp = other.getFracPtr();
         while (exp < (other.getIntPtr() + 1)) {
             let term = multByDigit(other.getDigit(exp), exp);
-            do result.addToThis(term);
+            do result.add(term);
             do term.dispose();
             let exp = exp + 1; }
         if (oneOf(positive, other.isPositive())) {
             do result.invert(); }
+        return result;
+    }
+
+    method Decimal div(Decimal other)
+    {
+        var int exp;
+        var Decimal remainder, s, result;
+        if (other.isZero()) {
+            return Decimal.new("-99999999.999999999"); }
+        let result = Decimal.fromInt(0);
+        let remainder = abs();
+        let s = other.abs();
+        let exp = getExp() - other.getExp();
+        do s.shift(exp);
+
+
+        while ((exp > -10) & (~(s.isZero()))) { 
+            while (remainder.greaterOrEq(s)) {
+                do remainder.sub(s);
+                do result.addToDigit(exp, 1); }
+            let exp = exp - 1;
+            do s.shift(-1); }
+        if (oneOf(isPositive(), other.isPositive())) {
+            do result.invert(); }
+        do remainder.dispose();
+        do s.dispose();
         return result;
     }
 
@@ -195,13 +264,26 @@ class Decimal
     {
         var int i;
         let i = Math.max(getIntPtr(), other.getIntPtr());
-        while (i > -7) {
+        while (i > -10) {
             if (getDigit(i) > other.getDigit(i)) {
                 return true; }
             if (getDigit(i) < other.getDigit(i)) {
                 return false; }
             let i = i - 1; }
         return false;
+    }
+
+    method bool greaterOrEq(Decimal other) 
+    {
+        var int i;
+        let i = Math.max(getIntPtr(), other.getIntPtr());
+        while (i > -10) {
+            if (getDigit(i) > other.getDigit(i)) {
+                return true; }
+            if (getDigit(i) < other.getDigit(i)) {
+                return false; }
+            let i = i - 1; }
+        return true;
     }
 
     method String toString()
@@ -217,10 +299,30 @@ class Decimal
         while (i > (getFracPtr() - 1)) {
             if (i = -1) {
                 do StringX.appendTo(result, "."); }
-            do result.appendChar(intToChar(getDigit(i)));
+            do result.appendChar(CharX.fromDigit(getDigit(i)));
             let i = i - 1; }
         
         return result;
+    }
+
+    method void print()
+    {
+        var String str;
+        let str = toString();
+        do Output.printString(str);
+        do str.dispose();
+        return;
+    }
+
+    method Decimal abs() 
+    { 
+        var Decimal result;
+        if (~positive) {
+            do invert(); 
+            let result = copy();
+            do invert();
+            return result; }
+        return copy();
     }
 
     method Decimal copy() 
@@ -257,6 +359,7 @@ class Decimal
 
     method bool isPositive() { return positive; }
     method bool isFraction() { return fraction; }
+    method bool isZero() { return (getIntPtr() = 0) & (getFracPtr() = 0) & (getDigit(0) = 0); }
 
     method int getIntPtr() 
     {
@@ -280,6 +383,41 @@ class Decimal
         return i;
     }
 
+    method int getExp() 
+    {
+        var int i;
+        let i = 9;
+        while (i > -9) {
+            if (getDigit(i) > 0) {
+                return i; }
+            let i = i - 1; } 
+        return -9;
+    }
+
+    method void shift(int pos) 
+    {
+        var int i;
+        if (pos > 0) {
+            let i = 9 - pos;
+            while (i > -10) {
+                do setDigit(i + pos, getDigit(i));
+                let i = i - 1; }
+            let i = 0;
+            while (i < pos) {
+                do setDigit(-9 + i, 0); 
+                let i = i + 1; } }
+        if (pos < 0) {
+            let i = -9 - pos;
+            while (i < 10) {
+                do setDigit(i + pos, getDigit(i));
+                let i = i + 1; }
+            let i = 0;
+            while (i > pos) {
+                do setDigit(9 + i, 0); 
+                let i = i - 1; } }
+        return;
+    }
+
     method int getDigit(int i) { return digits[9-i]; }
     method void setDigit(int i, int value) { let digits[9-i] = value; return; }
     method void addToDigit(int i, int value) { let digits[9-i] = digits[9-i] + value; return; }
@@ -292,9 +430,6 @@ class Decimal
         if (n = 3) { return 1000; }
         return 10000; }
     method boolean oneOf(boolean a, boolean b) { return (a | b) & ~(a & b); }
-    
-    method int charToInt(Char c) { return c - 48; }
-    method Char intToChar(int i) { return i + 48; }
 
     method void dispose() 
     {

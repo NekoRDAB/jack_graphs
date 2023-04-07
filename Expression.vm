@@ -30,15 +30,13 @@ push local 2
 call String.charAt 2
 pop local 3
 push local 3
+push constant 1
+call String.new 1
 push constant 46
-eq
-push constant 47
+call String.appendChar 2
+call CharX.areEqual 2
 push local 3
-lt
-push local 3
-push constant 58
-lt
-and
+call CharX.isDigit 1
 or
 if-goto IF_TRUE0
 goto IF_FALSE0
@@ -54,15 +52,13 @@ add
 call String.charAt 2
 pop local 3
 push local 3
+push constant 1
+call String.new 1
 push constant 46
-eq
-push constant 47
+call String.appendChar 2
+call CharX.areEqual 2
 push local 3
-lt
-push local 3
-push constant 58
-lt
-and
+call CharX.isDigit 1
 or
 not
 if-goto IF_TRUE1
@@ -95,11 +91,36 @@ pop local 1
 label IF_FALSE1
 label IF_FALSE0
 push local 3
-push constant 43
-eq
+push constant 1
+call String.new 1
+push constant 88
+call String.appendChar 2
+call CharX.areEqual 2
 if-goto IF_TRUE2
 goto IF_FALSE2
 label IF_TRUE2
+push local 1
+push this 2
+add
+push constant 3
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push local 1
+push constant 1
+add
+pop local 1
+label IF_FALSE2
+push local 3
+push constant 1
+call String.new 1
+push constant 43
+call String.appendChar 2
+call CharX.areEqual 2
+if-goto IF_TRUE3
+goto IF_FALSE3
+label IF_TRUE3
 push local 1
 push this 1
 add
@@ -120,44 +141,20 @@ push local 1
 push constant 1
 add
 pop local 1
-label IF_FALSE2
-push local 3
-push constant 45
-eq
-if-goto IF_TRUE3
-goto IF_FALSE3
-label IF_TRUE3
-push local 1
-push this 1
-add
-push constant 1
-pop temp 0
-pop pointer 1
-push temp 0
-pop that 0
-push local 1
-push this 2
-add
-push constant 2
-pop temp 0
-pop pointer 1
-push temp 0
-pop that 0
-push local 1
-push constant 1
-add
-pop local 1
 label IF_FALSE3
 push local 3
-push constant 42
-eq
+push constant 1
+call String.new 1
+push constant 45
+call String.appendChar 2
+call CharX.areEqual 2
 if-goto IF_TRUE4
 goto IF_FALSE4
 label IF_TRUE4
 push local 1
 push this 1
 add
-push constant 2
+push constant 1
 pop temp 0
 pop pointer 1
 push temp 0
@@ -176,11 +173,44 @@ add
 pop local 1
 label IF_FALSE4
 push local 3
-push constant 94
-eq
+push constant 1
+call String.new 1
+push constant 42
+call String.appendChar 2
+call CharX.areEqual 2
 if-goto IF_TRUE5
 goto IF_FALSE5
 label IF_TRUE5
+push local 1
+push this 1
+add
+push constant 2
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push local 1
+push this 2
+add
+push constant 2
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push local 1
+push constant 1
+add
+pop local 1
+label IF_FALSE5
+push local 3
+push constant 1
+call String.new 1
+push constant 94
+call String.appendChar 2
+call CharX.areEqual 2
+if-goto IF_TRUE6
+goto IF_FALSE6
+label IF_TRUE6
 push local 1
 push this 1
 add
@@ -201,17 +231,28 @@ push local 1
 push constant 1
 add
 pop local 1
-label IF_FALSE5
+label IF_FALSE6
 push local 3
-push constant 88
-eq
-if-goto IF_TRUE6
-goto IF_FALSE6
-label IF_TRUE6
+push constant 1
+call String.new 1
+push constant 47
+call String.appendChar 2
+call CharX.areEqual 2
+if-goto IF_TRUE7
+goto IF_FALSE7
+label IF_TRUE7
+push local 1
+push this 1
+add
+push constant 4
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
 push local 1
 push this 2
 add
-push constant 3
+push constant 2
 pop temp 0
 pop pointer 1
 push temp 0
@@ -220,7 +261,7 @@ push local 1
 push constant 1
 add
 pop local 1
-label IF_FALSE6
+label IF_FALSE7
 push local 2
 push constant 1
 add
@@ -294,7 +335,7 @@ goto IF_FALSE2
 label IF_TRUE2
 push local 2
 push local 3
-call Decimal.add 2
+call Decimal.plus 2
 pop local 4
 label IF_FALSE2
 push local 0
@@ -309,7 +350,7 @@ goto IF_FALSE3
 label IF_TRUE3
 push local 2
 push local 3
-call Decimal.sub 2
+call Decimal.minus 2
 pop local 4
 label IF_FALSE3
 push local 0
@@ -343,6 +384,21 @@ call Decimal.toInt 1
 call Decimal.pow 2
 pop local 4
 label IF_FALSE5
+push local 0
+push this 1
+add
+pop pointer 1
+push that 0
+push constant 4
+eq
+if-goto IF_TRUE6
+goto IF_FALSE6
+label IF_TRUE6
+push local 2
+push local 3
+call Decimal.div 2
+pop local 4
+label IF_FALSE6
 push this 0
 push local 4
 call DStack.Push 2
@@ -361,15 +417,15 @@ pop pointer 1
 push that 0
 push constant 3
 eq
-if-goto IF_TRUE6
-goto IF_FALSE6
-label IF_TRUE6
+if-goto IF_TRUE7
+goto IF_FALSE7
+label IF_TRUE7
 push this 0
 push argument 1
 call Decimal.copy 1
 call DStack.Push 2
 pop temp 0
-label IF_FALSE6
+label IF_FALSE7
 push local 0
 push constant 1
 add
